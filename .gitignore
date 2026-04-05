@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env.local
+
+# 环境变量与密钥（勿提交；仅 *.example 可入库）
+.env
+**/.env
+!**/.env.example
+*.pem
+*.key
+secrets/
+
+# 后端本地密钥（若将敏感信息写入 .env，勿提交）
+backend/.env
+
+# 上传的音频（保留目录）
+Storage/*
+!Storage/.gitkeep
+
+# 后端滚动日志
+logs/*
+!logs/.gitkeep

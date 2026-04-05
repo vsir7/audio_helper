@@ -1,0 +1,10 @@
+# macOS/Homebrew Python 常受 PEP 668 限制，请勿全局 pip install。
+# 建议在 backend 目录：python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# 启动（任选其一）：
+#   cd backend && .venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+#   或在仓库根目录：.venv/bin/uvicorn backend.main:app --host 0.0.0.0 --port 8000
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.12
+pydantic-settings>=2.6.0
+httpx>=0.27.0

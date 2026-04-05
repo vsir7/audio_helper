@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>相遇助手 · 语音</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <h1 class="title">相遇助手</h1>
+        <p class="subtitle">用语音描述你和朋友的所在位置，获取相遇地点推荐</p>
+      </header>
+
+      <main class="main">
+        <section class="panel panel--record" aria-labelledby="record-heading">
+          <h2 id="record-heading" class="panel__title">录音</h2>
+          <p class="hint">点击开始，用普通话简短说明两人的位置或地标。</p>
+
+          <div class="meter-wrap" aria-hidden="true">
+            <div id="meter" class="meter" role="presentation"></div>
+          </div>
+
+          <div class="controls">
+            <button type="button" id="btnRecord" class="btn btn--primary">
+              开始录音
+            </button>
+            <button type="button" id="btnStop" class="btn btn--secondary" disabled>
+              停止并上传
+            </button>
+          </div>
+
+          <p id="recordStatus" class="status" role="status"></p>
+        </section>
+
+        <section class="panel panel--result" aria-labelledby="result-heading">
+          <h2 id="result-heading" class="panel__title">结果</h2>
+
+          <div id="phase" class="phase" aria-live="polite"></div>
+
+          <div class="result-block">
+            <span class="label">识别与回复（后端返回时显示）</span>
+            <pre id="replyText" class="reply-text" hidden></pre>
+          </div>
+
+          <div class="player-wrap">
+            <span class="label">语音播报</span>
+            <audio id="ttsPlayer" class="player" controls preload="none"></audio>
+            <p id="playerHint" class="player-hint"></p>
+          </div>
+
+          <p id="errorBox" class="error" role="alert" hidden></p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>后端接口</span>
+        <code id="apiDisplay"></code>
+      </footer>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
