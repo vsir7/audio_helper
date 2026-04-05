@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from amap_client import meetup_recommend
+from mcp_dump import MCPJsonRecorder
 from bailian_asr import save_asr_result_json, transcribe_file
 from bailian_tts import synthesize_to_storage
 from config import settings
@@ -272,10 +273,12 @@ async def process_audio(
             },
         )
 
+    mcp_rec = MCPJsonRecorder(storage, stem)
     try:
         meetup = await meetup_recommend(
             addresses["address_a"],
             addresses["address_b"],
+            mcp_recorder=mcp_rec,
         )
     except ValueError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
@@ -339,6 +342,7 @@ async def process_audio(
             "deepseek_addresses": addresses,
             "deepseek_extract_raw_completion": raw_deepseek,
             "amap_meetup_recommend": meetup,
+            "mcp_json_files": meetup.get("mcp_json_files") or [],
             "structured_reply_fallback": structured_reply,
             "deepseek_composed_reply": composed_reply,
             "deepseek_compose_raw_completion": raw_compose,
@@ -370,6 +374,7 @@ async def process_audio(
             "meetup_location": meetup.get("meetup_location"),
             "travel_to_meetup": meetup.get("travel_to_meetup"),
         },
+        "mcp_json_files": meetup.get("mcp_json_files") or [],
     }
     if tts_saved_as:
         out["tts_saved_as"] = tts_saved_as

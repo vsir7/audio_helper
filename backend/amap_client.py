@@ -8,6 +8,7 @@ from typing import Any
 import httpx
 
 from config import settings
+from mcp_dump import MCPJsonRecorder
 from proxy_util import clear_proxy_environment
 
 log = logging.getLogger("audio_helper.amap")
@@ -223,24 +224,84 @@ def _summarize_regeo(data: dict[str, Any]) -> dict[str, Any]:
 async def meetup_recommend(
     address_a: str,
     address_b: str,
+    *,
+    mcp_recorder: MCPJsonRecorder | None = None,
 ) -> dict[str, Any]:
     """
     两人地址 → 各自坐标 → 几何中点作为「推荐相遇坐标」
     → 逆地理编码得到可读位置说明
     → 测量两人各自到相遇点的距离（无 POI/品类偏好）。
+    若传入 mcp_recorder，每次高德 HTTP 往返会写入 Storage：{stem}_MCP01.json …
     """
     if not address_a or not address_b:
         raise ValueError("两个地址均不能为空，请检查 DeepSeek 抽取结果")
 
     loc_a, raw_a = await geocode_address(address_a)
+    if mcp_recorder:
+        mcp_recorder.write(
+            "geocode_person_a",
+            "amap_geocode_geo",
+            {
+                "method": "GET",
+                "url": settings.amap_geocode_url,
+                "query": {"address": address_a, "key": settings.amap_rest_key},
+            },
+            raw_a,
+        )
+
     loc_b, raw_b = await geocode_address(address_b)
+    if mcp_recorder:
+        mcp_recorder.write(
+            "geocode_person_b",
+            "amap_geocode_geo",
+            {
+                "method": "GET",
+                "url": settings.amap_geocode_url,
+                "query": {"address": address_b, "key": settings.amap_rest_key},
+            },
+            raw_b,
+        )
+
     mid = _midpoint(loc_a, loc_b)
 
     raw_regeo = await regeo_location(mid)
+    if mcp_recorder:
+        mcp_recorder.write(
+            "regeo_meetup_midpoint",
+            "amap_geocode_regeo",
+            {
+                "method": "GET",
+                "url": settings.amap_regeo_url,
+                "query": {
+                    "location": mid,
+                    "extensions": "base",
+                    "radius": "300",
+                    "key": settings.amap_rest_key,
+                },
+            },
+            raw_regeo,
+        )
     regeo_summary = _summarize_regeo(raw_regeo)
 
     origins_pipe = f"{loc_a}|{loc_b}"
     raw_distance = await distance_batch_to_destination(origins_pipe, mid)
+    if mcp_recorder:
+        mcp_recorder.write(
+            "distance_both_to_meetup",
+            "amap_distance",
+            {
+                "method": "GET",
+                "url": settings.amap_distance_url,
+                "query": {
+                    "origins": origins_pipe,
+                    "destination": mid,
+                    "type": str(settings.amap_distance_type),
+                    "output": "JSON",
+                    "key": settings.amap_rest_key,
+                },
+            },
+            raw_distance,
+        )
     leg_a, leg_b = _parse_distance_results(raw_distance)
 
     return {
@@ -267,4 +328,5 @@ async def meetup_recommend(
         "raw_geocode_b": raw_b,
         "raw_regeo": raw_regeo,
         "raw_distance": raw_distance,
+        "mcp_json_files": list(mcp_recorder.filenames) if mcp_recorder else [],
     }

@@ -64,6 +64,8 @@
 
 流水线落盘见 `Storage/*.pipeline.json` 中 `amap_meetup_recommend`；`strategy` 字段为 `midpoint_no_poi_preference`。
 
+每次成功的高德 HTTP 往返还会额外写入 **`Storage/{同录音主文件名}_MCP01.json`**、`_MCP02.json` …（内含脱敏后的请求元数据与完整响应 JSON，便于对照「地图侧」通信；字段说明见文件内 `note`）。
+
 ---
 
 ## 四、Key 与安全
