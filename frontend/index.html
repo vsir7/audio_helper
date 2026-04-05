@@ -4,30 +4,82 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>相遇助手 · 语音</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Raleway:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <div class="page">
+      <div class="page__glow page__glow--a" aria-hidden="true"></div>
+      <div class="page__glow page__glow--b" aria-hidden="true"></div>
+      <div class="page__grid" aria-hidden="true"></div>
+
       <header class="header">
-        <h1 class="title">相遇助手</h1>
-        <p class="subtitle">用语音描述你和朋友的所在位置，获取相遇地点推荐</p>
+        <p class="header__eyebrow">语音相遇</p>
+        <div class="header__row">
+          <h1 class="title">相遇助手</h1>
+          <p class="subtitle">
+            用语音描述你和朋友的所在位置，获取相遇地点推荐
+          </p>
+        </div>
       </header>
 
       <main class="main">
-        <section class="panel panel--record" aria-labelledby="record-heading">
-          <h2 id="record-heading" class="panel__title">录音</h2>
+        <section
+          class="panel panel--record"
+          aria-labelledby="record-heading"
+        >
+          <div class="panel__accent panel__accent--teal" aria-hidden="true"></div>
+          <div class="panel__head">
+            <span class="panel__icon panel__icon--record" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 14a3 3 0 0 0 3-3V7a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M19 11a7 7 0 0 1-14 0M12 18v3M8 22h8"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <div class="panel__head-text">
+              <h2 id="record-heading" class="panel__title">录音</h2>
+              <p class="panel__kicker">采集位置描述</p>
+            </div>
+          </div>
           <p class="hint">点击开始，用普通话简短说明两人的位置或地标。</p>
 
-          <div class="meter-wrap" aria-hidden="true">
-            <div id="meter" class="meter" role="presentation"></div>
+          <div class="meter-shell">
+            <div class="meter-wrap" aria-hidden="true">
+              <div id="meter" class="meter" role="presentation"></div>
+            </div>
           </div>
 
           <div class="controls">
             <button type="button" id="btnRecord" class="btn btn--primary">
-              开始录音
+              <span class="btn__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="5" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="btn__label">开始录音</span>
             </button>
             <button type="button" id="btnStop" class="btn btn--secondary" disabled>
-              停止并上传
+              <span class="btn__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="btn__label">停止并上传</span>
             </button>
           </div>
 
@@ -35,7 +87,23 @@
         </section>
 
         <section class="panel panel--result" aria-labelledby="result-heading">
-          <h2 id="result-heading" class="panel__title">结果</h2>
+          <div class="panel__accent panel__accent--amber" aria-hidden="true"></div>
+          <div class="panel__head">
+            <span class="panel__icon panel__icon--result" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9 18V6l10 6-10 6Z"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <div class="panel__head-text">
+              <h2 id="result-heading" class="panel__title">结果</h2>
+              <p class="panel__kicker">识别 · 推荐 · 播报</p>
+            </div>
+          </div>
 
           <div id="phase" class="phase" aria-live="polite"></div>
 
@@ -44,7 +112,7 @@
             <pre id="replyText" class="reply-text" hidden></pre>
           </div>
 
-          <div class="player-wrap">
+          <div class="player-card">
             <span class="label">语音播报</span>
             <audio id="ttsPlayer" class="player" controls preload="none"></audio>
             <p id="playerHint" class="player-hint"></p>
@@ -53,11 +121,6 @@
           <p id="errorBox" class="error" role="alert" hidden></p>
         </section>
       </main>
-
-      <footer class="footer">
-        <span>后端接口</span>
-        <code id="apiDisplay"></code>
-      </footer>
     </div>
 
     <script type="module" src="./js/app.js"></script>

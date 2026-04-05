@@ -18,7 +18,6 @@ const els = {
   ttsPlayer: document.getElementById("ttsPlayer"),
   playerHint: document.getElementById("playerHint"),
   errorBox: document.getElementById("errorBox"),
-  apiDisplay: document.getElementById("apiDisplay"),
 };
 
 /** @type {MediaRecorder | null} */
@@ -262,8 +261,6 @@ async function uploadRecording() {
 }
 
 function wire() {
-  els.apiDisplay.textContent = `${API_BASE}${PROCESS_PATH}`;
-
   els.btnRecord.addEventListener("click", () => {
     startRecording().catch((e) => {
       setError(
